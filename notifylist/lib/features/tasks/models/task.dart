@@ -1,0 +1,11 @@
+import 'package:drift/drift.dart';
+
+class Tasks extends Table{
+
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text()();
+  TextColumn get colorHex => text()();
+  TextColumn get icon => text()();
+  DateTimeColumn get createdAt => dateTime()();
+
+}
