@@ -1,11 +1,14 @@
 import 'package:drift/drift.dart';
 
+
 class Tasks extends Table{
 
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get name => text()();
-  TextColumn get colorHex => text()();
-  TextColumn get icon => text()();
+  TextColumn get title => text()();
+  TextColumn get description => text().nullable()();
+  TextColumn get categoryId => text()();
+  DateTimeColumn get scheduledAt => dateTime().nullable()();
+  BoolColumn get isCompleted => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime()();
-
+  
 }

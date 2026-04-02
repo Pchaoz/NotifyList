@@ -3,8 +3,8 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import 'package:notifylist/features/tasks/models/task.dart';
 import 'package:notifylist/features/categories/models/category.dart';
+import 'package:notifylist/features/tasks/models/task.dart';
 
 part 'app_database.g.dart';
 

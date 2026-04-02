@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notifylist/core/database/app_database.dart';
+import 'package:notifylist/core/theme/app_theme.dart';
+import 'package:notifylist/features/tasks/screens/tasks_screen.dart';
 
 late AppDatabase database;
 
@@ -8,7 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   database = AppDatabase();
 
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -19,15 +22,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'NotifyList',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-        useMaterial3: true,
-      ),
-      home: const Scaffold(
-        body: Center(
-          child: Text('Base creada para NotifyList'),
-        ),
-      ),
+      theme: AppTheme.darkTheme,
+      home: const TasksScreen(),
     );
 
   }
