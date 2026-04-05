@@ -21,16 +21,19 @@ class TasksNotifier extends AsyncNotifier<List<Task>> {
 
   // Agregar una nueva "Task" a la base de datos
   Future<void> addTask({
-    required String title,
-    String? description,
-    required String categoryId,
-    DateTime? scheduledAt,
+  required String title,
+  String? description,
+  required String categoryId,
+  DateTime? scheduledDate,
+  int? startTime,
+  int? endTime,
+  String? weekDays,
   }) async {
     final newTask = TasksCompanion(
       title: Value(title),
       description: Value(description),
       categoryId: Value(categoryId),
-      scheduledAt: Value(scheduledAt),
+      scheduledDate: Value(scheduledDate),
       isCompleted: Value(false),
       createdAt: Value(DateTime.now())
     );
