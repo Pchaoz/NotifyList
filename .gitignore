@@ -1,85 +1,34 @@
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
-.DS_Store
-notifylist/.atom/
-notifylist/.build/
-notifylist/.buildlog/
-notifylist/.history
-notifylist/.svn/
-notifylist/.swiftpm/
-notifylist/migrate_working_dir/
-
-# IntelliJ related
-*.iml
-*.ipr
-*.iws
-notifylist/.idea/
-
-# VS Code
-#notifylist/.vscode/
-
-# Flutter/Dart/Pub related
-**/doc/api/
-notifylist/**/ios/Flutter/.last_build_id
-notifylist/.dart_tool/
-notifylist/.flutter-plugins
-notifylist/.flutter-plugins-dependencies
-notifylist/.pub-cache/
-notifylist/.pub/
-notifylist/build/
-notifylist/coverage/
-
-# Archivos generados por build_runner
-notifylist/**/*.g.dart
-notifylist/**/*.freezed.dart
-notifylist/**/*.mocks.dart
+# Flutter / Dart
+hyperfocus/.dart_tool/
+hyperfocus/.packages
+hyperfocus/.pub/
+hyperfocus/build/
+hyperfocus/.flutter-plugins
+hyperfocus/.flutter-plugins-dependencies
+hyperfocus/pubspec.lock
 
 # Android
-notifylist/android/app/debug
-notifylist/android/app/profile
-notifylist/android/app/release
-notifylist/android/.gradle/
-notifylist/android/captures/
-notifylist/android/local.properties
-notifylist/android/key.properties
+hyperfocus/android/.gradle/
+hyperfocus/android/app/build/
+hyperfocus/android/local.properties
+hyperfocus/android/key.properties
+hyperfocus/android/*.jks
 
-# iOS
-notifylist/ios/Flutter/App.framework
-notifylist/ios/Flutter/Flutter.framework
-notifylist/ios/Flutter/Flutter.podspec
-notifylist/ios/Flutter/Generated.xcconfig
-notifylist/ios/Flutter/ephemeral/
-notifylist/ios/Flutter/app.flx
-notifylist/ios/Flutter/app.zip
-notifylist/ios/Flutter/flutter_assets/
-notifylist/ios/ServiceDefinitions.json
-notifylist/ios/Runner/GeneratedPluginRegistrant.*
-notifylist/ios/Pods/
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*~
 
 # macOS
-notifylist/macos/Flutter/GeneratedPluginRegistrant.swift
-notifylist/macos/Flutter/ephemeral/
+.DS_Store
 
 # Windows
-notifylist/windows/flutter/generated_plugin_registrant.cc
-notifylist/windows/flutter/generated_plugin_registrant.h
-notifylist/windows/flutter/generated_plugins.cmake
+Thumbs.db
+desktop.ini
 
-# Linux
-notifylist/linux/flutter/generated_plugin_registrant.cc
-notifylist/linux/flutter/generated_plugin_registrant.h
-notifylist/linux/flutter/generated_plugins.cmake
-
-# Symbolication related
-app.*.symbols
-
-# Obfuscation related
-app.*.map.json
-
-# Base de datos local
-notifylist/**/*.db
-notifylist/**/*.sqlite
-notifylist/**/*.sqlite-journal
+# Credenciales (nunca subir)
+*.env
+.env.*
