@@ -12,6 +12,7 @@ class AppTheme {
   static const Color textSecondary = Color(0xFF9E9EAE);
   static const Color completed = Color(0xFF4CAF50);
   static const Color danger = Color(0xFFCF6679);
+    static const Color error = Color.fromARGB(255, 255, 0, 47);
 
   // Rarity colors (gacha)
   static const Color rarityCommon = Color(0xFF9E9E9E);

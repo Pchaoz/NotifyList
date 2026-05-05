@@ -5,33 +5,45 @@ import 'package:hyperfocus/core/theme/app_theme.dart';
 import 'package:hyperfocus/features/auth/domain/auth_state.dart';
 import 'package:hyperfocus/features/auth/presentation/auth_provider.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends ConsumerStatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmController = TextEditingController();
   bool _obscurePassword = true;
+  bool _obscureConfirm = true;
+  bool _registrationSent = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmController.dispose();
     super.dispose();
   }
 
-  void _submit() {
+  void _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    ref.read(authProvider.notifier).signIn(
+    await ref.read(authProvider.notifier).signUp(
           email: _emailController.text.trim(),
           password: _passwordController.text,
         );
+
+    // After an async gap, the widget may have been disposed.
+    if (!mounted) return;
+
+    final state = ref.read(authProvider);
+    if (state is Unauthenticated) {
+      setState(() => _registrationSent = true);
+    }
   }
 
   @override
@@ -39,7 +51,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final authState = ref.watch(authProvider);
     final isLoading = authState is AuthLoading;
 
-    // Show error snackbar when auth fails.
     ref.listen<AppAuthState>(authProvider, (prev, next) {
       if (next is AuthError) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -51,6 +62,51 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       }
     });
 
+    // Confirmation message after successful registration.
+    if (_registrationSent) {
+      return Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.mark_email_read_outlined,
+                    size: 64,
+                    color: AppTheme.primary,
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Revisa tu correo',
+                    style:
+                        Theme.of(context).textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Hemos enviado un enlace de verificacion a '
+                    '${_emailController.text.trim()}. '
+                    'Confirma tu cuenta y luego inicia sesion.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: AppTheme.textSecondary),
+                  ),
+                  const SizedBox(height: 32),
+                  FilledButton(
+                    onPressed: () => context.go('/login'),
+                    child: const Text('Ir a iniciar sesion'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Registration form.
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -62,18 +118,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // App title
                   Text(
-                    'Hyperfocus',
+                    'Crear cuenta',
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                          color: AppTheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style:
+                        Theme.of(context).textTheme.headlineLarge?.copyWith(
+                              color: AppTheme.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Inicia sesion para continuar',
+                    'Empieza a organizar tus tareas',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppTheme.textSecondary,
@@ -81,7 +137,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: 48),
 
-                  // Email field
+                  // Email
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -102,12 +158,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Password field
+                  // Password
                   TextFormField(
                     controller: _passwordController,
                     obscureText: _obscurePassword,
-                    textInputAction: TextInputAction.done,
-                    onFieldSubmitted: (_) => _submit(),
+                    textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
                       labelText: 'Contrasena',
                       prefixIcon: const Icon(Icons.lock_outlined),
@@ -118,20 +173,54 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               : Icons.visibility_off_outlined,
                         ),
                         onPressed: () {
-                          setState(() => _obscurePassword = !_obscurePassword);
+                          setState(
+                              () => _obscurePassword = !_obscurePassword);
                         },
                       ),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Introduce tu contrasena';
+                        return 'Introduce una contrasena';
+                      }
+                      if (value.length < 6) {
+                        return 'Minimo 6 caracteres';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Confirm password
+                  TextFormField(
+                    controller: _confirmController,
+                    obscureText: _obscureConfirm,
+                    textInputAction: TextInputAction.done,
+                    onFieldSubmitted: (_) => _submit(),
+                    decoration: InputDecoration(
+                      labelText: 'Confirmar contrasena',
+                      prefixIcon: const Icon(Icons.lock_outlined),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureConfirm
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                        ),
+                        onPressed: () {
+                          setState(
+                              () => _obscureConfirm = !_obscureConfirm);
+                        },
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value != _passwordController.text) {
+                        return 'Las contrasenas no coinciden';
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 32),
 
-                  // Login button
+                  // Register button
                   FilledButton(
                     onPressed: isLoading ? null : _submit,
                     child: isLoading
@@ -143,22 +232,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               color: Colors.white,
                             ),
                           )
-                        : const Text('Iniciar sesion'),
+                        : const Text('Registrarse'),
                   ),
                   const SizedBox(height: 16),
 
-                  // Link to register
+                  // Link to login
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'No tienes cuenta? ',
+                        'Ya tienes cuenta? ',
                         style: TextStyle(color: AppTheme.textSecondary),
                       ),
                       GestureDetector(
-                        onTap: () => context.go('/register'),
+                        onTap: () => context.go('/login'),
                         child: Text(
-                          'Registrate',
+                          'Inicia sesion',
                           style: TextStyle(
                             color: AppTheme.primary,
                             fontWeight: FontWeight.w600,

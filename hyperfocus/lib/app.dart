@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hyperfocus/core/theme/app_theme.dart';
 import 'package:hyperfocus/core/router.dart';
+import 'package:hyperfocus/core/theme/app_theme.dart';
 
 class HyperfocusApp extends ConsumerWidget {
   const HyperfocusApp({super.key});
